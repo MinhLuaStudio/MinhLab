@@ -1,0 +1,59 @@
+_G.AutoAttack = true
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+local Remote, RemoteId
+local function FindRemotes()
+    for _, folder in pairs({ReplicatedStorage.Util, ReplicatedStorage.Common, ReplicatedStorage.Remotes, ReplicatedStorage.Assets, ReplicatedStorage.FX}) do
+        for _, child in pairs(folder:GetChildren()) do
+            if child:IsA('RemoteEvent') and child:GetAttribute('Id') then
+                RemoteId = child:GetAttribute('Id')
+                Remote = child
+            end
+        end
+    end
+end
+FindRemotes()
+
+task.spawn(function()
+    while _G.AutoAttack do
+        local Char = Players.LocalPlayer.Character
+        local Root = Char and Char:FindFirstChild('HumanoidRootPart')
+        local Tool = Char and Char:FindFirstChildOfClass('Tool')
+        
+        if Root and Tool and (Tool:GetAttribute('WeaponType') == 'Melee' or Tool:GetAttribute('WeaponType') == 'Sword') then
+            local Targets = {}
+            for _, group in pairs({Workspace.Enemies, Workspace.Characters}) do
+                for _, v in pairs(group:GetChildren()) do
+                    local Hum = v:FindFirstChild('Humanoid')
+                    local Hrp = v:FindFirstChild('HumanoidRootPart')
+                    if v ~= Char and Hum and Hum.Health > 0 and Hrp and (Hrp.Position - Root.Position).Magnitude <= 60 then
+                        for _, p in pairs(v:GetChildren()) do
+                            if p:IsA('BasePart') then
+                                table.insert(Targets, {v, p})
+                            end
+                        end
+                    end
+                end
+            end
+
+            if #Targets > 0 then
+                pcall(function()
+                    local Net = require(ReplicatedStorage.Modules.Net)
+                    ReplicatedStorage.Modules.Net['RE/RegisterAttack']:FireServer()
+                    
+                    local Head = Targets[1][1]:FindFirstChild('Head')
+                    if Head and Remote then
+                        local Key = string.gsub('RE/RegisterHit', '.', function(c)
+                            return string.char(bit32.bxor(string.byte(c), math.floor(Workspace:GetServerTimeNow() / 10 % 10) + 1))
+                        end)
+                        cloneref(Remote):FireServer(Key, bit32.bxor(RemoteId + 909090, Net.seed:InvokeServer() * 2), Head, Targets)
+                    end
+                end)
+            end
+        end
+        task.synchronize() 
+    end
+end)
