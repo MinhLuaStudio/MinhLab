@@ -1,6 +1,10 @@
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
 local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local lp = Players.LocalPlayer
 
 local guiName = "GreenDarkCustomUI"
 if CoreGui:FindFirstChild(guiName) then
@@ -9,23 +13,29 @@ end
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = guiName
-ScreenGui.Parent = pcall(function() return CoreGui.Name end) and CoreGui or Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.Parent = pcall(function() return CoreGui.Name end) and CoreGui or lp:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local GreenAccent = Color3.fromRGB(0, 215, 100) 
 local DarkBg = Color3.fromRGB(20, 20, 25)
 local LighterBg = Color3.fromRGB(25, 25, 30)
 
-local MiniButton = Instance.new("ImageButton")
-MiniButton.Size = UDim2.new(0, 50, 0, 50)
+local ColorLight = Color3.fromRGB(150, 255, 150)
+local ColorDark = Color3.fromRGB(0, 150, 50)
+
+local MiniButton = Instance.new("TextButton")
+MiniButton.Size = UDim2.new(0, 45, 0, 45)
 MiniButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-MiniButton.BackgroundColor3 = LighterBg
-MiniButton.Image = "rbxassetid://114712897357043"
-MiniButton.Parent = ScreenGui
+MiniButton.BackgroundColor3 = DarkBg
+MiniButton.Text = "M"
+MiniButton.TextColor3 = ColorLight
+MiniButton.Font = Enum.Font.GothamBlack
+MiniButton.TextSize = 24
 MiniButton.AutoButtonColor = false
+MiniButton.Parent = ScreenGui
 
 local MiniCorner = Instance.new("UICorner")
-MiniCorner.CornerRadius = UDim.new(1, 0)
+MiniCorner.CornerRadius = UDim.new(0, 8)
 MiniCorner.Parent = MiniButton
 
 local MiniStroke = Instance.new("UIStroke")
@@ -34,7 +44,7 @@ MiniStroke.Thickness = 2
 MiniStroke.Parent = MiniButton
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 500, 0, 300)
+MainFrame.Size = UDim2.new(0, 520, 0, 320)
 MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.BackgroundColor3 = DarkBg
@@ -43,7 +53,7 @@ MainFrame.Visible = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = MainFrame
 
 local MainStroke = Instance.new("UIStroke")
@@ -52,83 +62,51 @@ MainStroke.Thickness = 1
 MainStroke.Transparency = 0.5
 MainStroke.Parent = MainFrame
 
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0, 40)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "MinhLab [Blox Fruit]"
+TitleLabel.TextColor3 = ColorLight
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 16
+TitleLabel.Parent = MainFrame
+
+local TitleLine = Instance.new("Frame")
+TitleLine.Size = UDim2.new(1, 0, 0, 1)
+TitleLine.Position = UDim2.new(0, 0, 1, 0)
+TitleLine.BackgroundColor3 = GreenAccent
+TitleLine.BackgroundTransparency = 0.5
+TitleLine.BorderSizePixel = 0
+TitleLine.Parent = TitleLabel
+
+local colorTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
+TweenService:Create(MiniButton, colorTweenInfo, {TextColor3 = ColorDark}):Play()
+TweenService:Create(TitleLabel, colorTweenInfo, {TextColor3 = ColorDark}):Play()
+
 local LeftPanel = Instance.new("Frame")
-LeftPanel.Size = UDim2.new(0, 130, 1, 0)
+LeftPanel.Size = UDim2.new(0, 130, 1, -41)
+LeftPanel.Position = UDim2.new(0, 0, 0, 41)
 LeftPanel.BackgroundColor3 = LighterBg
 LeftPanel.BorderSizePixel = 0
 LeftPanel.Parent = MainFrame
 
-local TabButton = Instance.new("TextButton")
-TabButton.Size = UDim2.new(0.9, 0, 0, 35)
-TabButton.Position = UDim2.new(0.05, 0, 0, 20)
-TabButton.BackgroundColor3 = GreenAccent
-TabButton.Text = "fraud"
-TabButton.TextColor3 = Color3.fromRGB(25, 25, 30)
-TabButton.Font = Enum.Font.GothamBold
-TabButton.TextSize = 13
-TabButton.AutoButtonColor = false
-TabButton.Parent = LeftPanel
+local LeftLayout = Instance.new("UIListLayout")
+LeftLayout.SortOrder = Enum.SortOrder.LayoutOrder
+LeftLayout.Padding = UDim.new(0, 10)
+LeftLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+LeftLayout.Parent = LeftPanel
 
-local TabCorner = Instance.new("UICorner")
-TabCorner.CornerRadius = UDim.new(0, 6)
-TabCorner.Parent = TabButton
+local LeftPadding = Instance.new("UIPadding")
+LeftPadding.PaddingTop = UDim.new(0, 15)
+LeftPadding.Parent = LeftPanel
 
 local RightPanel = Instance.new("Frame")
-RightPanel.Size = UDim2.new(1, -130, 1, 0)
-RightPanel.Position = UDim2.new(0, 130, 0, 0)
+RightPanel.Size = UDim2.new(1, -130, 1, -41)
+RightPanel.Position = UDim2.new(0, 130, 0, 41)
 RightPanel.BackgroundColor3 = DarkBg
 RightPanel.BackgroundTransparency = 1
-RightPanel.Visible = true
 RightPanel.Parent = MainFrame
-
-local ToggleContainer = Instance.new("Frame")
-ToggleContainer.Size = UDim2.new(1, -40, 0, 45)
-ToggleContainer.Position = UDim2.new(0, 20, 0, 20)
-ToggleContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-ToggleContainer.Parent = RightPanel
-
-local ToggleCorner = Instance.new("UICorner")
-ToggleCorner.CornerRadius = UDim.new(0, 6)
-ToggleCorner.Parent = ToggleContainer
-
-local ToggleText = Instance.new("TextLabel")
-ToggleText.Size = UDim2.new(0.7, 0, 1, 0)
-ToggleText.Position = UDim2.new(0, 15, 0, 0)
-ToggleText.BackgroundTransparency = 1
-ToggleText.Text = "Auto Attack" 
-ToggleText.TextColor3 = Color3.fromRGB(220, 220, 220)
-ToggleText.Font = Enum.Font.GothamSemibold
-ToggleText.TextSize = 15
-ToggleText.TextXAlignment = Enum.TextXAlignment.Left
-ToggleText.Parent = ToggleContainer
-
-local ToggleBg = Instance.new("TextButton")
-ToggleBg.Size = UDim2.new(0, 46, 0, 24)
-ToggleBg.Position = UDim2.new(1, -60, 0.5, -12)
-ToggleBg.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
-ToggleBg.Text = ""
-ToggleBg.AutoButtonColor = false
-ToggleBg.Parent = ToggleContainer
-
-local BgCorner = Instance.new("UICorner")
-BgCorner.CornerRadius = UDim.new(1, 0)
-BgCorner.Parent = ToggleBg
-
-local ToggleKnob = Instance.new("Frame")
-ToggleKnob.Size = UDim2.new(0, 20, 0, 20)
-ToggleKnob.Position = UDim2.new(0, 2, 0.5, -10)
-ToggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ToggleKnob.Parent = ToggleBg
-
-local KnobCorner = Instance.new("UICorner")
-KnobCorner.CornerRadius = UDim.new(1, 0)
-KnobCorner.Parent = ToggleKnob
-
-local isMenuOpen = true
-local isToggleOn = false
-
-_G.AutoAttack = false 
-_G.Auto_Attack = false
 
 local function CreateTween(object, info, properties)
     local tween = TweenService:Create(object, info, properties)
@@ -136,40 +114,18 @@ local function CreateTween(object, info, properties)
     return tween
 end
 
+local isMenuOpen = true
 MiniButton.MouseButton1Click:Connect(function()
     isMenuOpen = not isMenuOpen
     local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-    
     if isMenuOpen then
         MainFrame.Visible = true
-        CreateTween(MainFrame, tweenInfo, {Size = UDim2.new(0, 500, 0, 300)})
+        CreateTween(MainFrame, tweenInfo, {Size = UDim2.new(0, 520, 0, 320)})
     else
         local closeTween = CreateTween(MainFrame, tweenInfo, {Size = UDim2.new(0, 0, 0, 0)})
         closeTween.Completed:Connect(function()
             if not isMenuOpen then MainFrame.Visible = false end
         end)
-    end
-end)
-
-ToggleBg.MouseButton1Click:Connect(function()
-    isToggleOn = not isToggleOn
-    local tInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    _G.AutoAttack = isToggleOn
-    _G.Auto_Attack = isToggleOn
-    
-    if isToggleOn then
-        CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(1, -22, 0.5, -10)})
-        CreateTween(ToggleBg, tInfo, {BackgroundColor3 = GreenAccent})
-        
-        task.spawn(function()
-            pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/Auto_Attack"))()
-            end)
-        end)
-    else
-        CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(0, 2, 0.5, -10)})
-        CreateTween(ToggleBg, tInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 65)})
     end
 end)
 
@@ -180,7 +136,7 @@ local function MakeDraggable(dragObject, targetObject)
             dragging = true; dragStart = input.Position; startPos = targetObject.Position
         end
     end)
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
+    UserInputService.InputChanged:Connect(function(input)
         if dragging and (input == dragInput or input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
             targetObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
@@ -189,6 +145,319 @@ local function MakeDraggable(dragObject, targetObject)
     dragObject.InputChanged:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end end)
     dragObject.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
 end
-
 MakeDraggable(MiniButton, MiniButton)
 MakeDraggable(MainFrame, MainFrame)
+MakeDraggable(TitleLabel, MainFrame)
+
+local Pages = {}
+local function CreateTab(name)
+    local TabBtn = Instance.new("TextButton")
+    TabBtn.Size = UDim2.new(0.9, 0, 0, 35)
+    TabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    TabBtn.Text = name
+    TabBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
+    TabBtn.Font = Enum.Font.GothamBold
+    TabBtn.TextSize = 13
+    TabBtn.AutoButtonColor = false
+    TabBtn.Parent = LeftPanel
+    Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 6)
+
+    local Page = Instance.new("ScrollingFrame")
+    Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.BackgroundTransparency = 1
+    Page.ScrollBarThickness = 2
+    Page.Visible = false
+    Page.Parent = RightPanel
+
+    local PageLayout = Instance.new("UIListLayout")
+    PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    PageLayout.Padding = UDim.new(0, 8)
+    PageLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    PageLayout.Parent = Page
+
+    local PagePadding = Instance.new("UIPadding")
+    PagePadding.PaddingTop = UDim.new(0, 15)
+    PagePadding.PaddingBottom = UDim.new(0, 15)
+    PagePadding.Parent = Page
+
+    table.insert(Pages, Page)
+
+    TabBtn.MouseButton1Click:Connect(function()
+        for _, btn in pairs(LeftPanel:GetChildren()) do
+            if btn:IsA("TextButton") then
+                CreateTween(btn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(35, 35, 40), TextColor3 = Color3.fromRGB(200, 200, 200)})
+            end
+        end
+        for _, p in pairs(Pages) do p.Visible = false end
+        CreateTween(TabBtn, TweenInfo.new(0.2), {BackgroundColor3 = GreenAccent, TextColor3 = DarkBg})
+        Page.Visible = true
+    end)
+
+    return Page, TabBtn
+end
+
+local function CreateToggle(parent, text, callback)
+    local Container = Instance.new("Frame")
+    Container.Size = UDim2.new(0.95, 0, 0, 40)
+    Container.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    Container.Parent = parent
+    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
+
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(0.7, 0, 1, 0)
+    Title.Position = UDim2.new(0, 15, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(220, 220, 220)
+    Title.Font = Enum.Font.GothamSemibold
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Container
+
+    local ToggleBg = Instance.new("TextButton")
+    ToggleBg.Size = UDim2.new(0, 42, 0, 20)
+    ToggleBg.Position = UDim2.new(1, -55, 0.5, -10)
+    ToggleBg.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
+    ToggleBg.Text = ""
+    ToggleBg.AutoButtonColor = false
+    ToggleBg.Parent = Container
+    Instance.new("UICorner", ToggleBg).CornerRadius = UDim.new(1, 0)
+
+    local ToggleKnob = Instance.new("Frame")
+    ToggleKnob.Size = UDim2.new(0, 16, 0, 16)
+    ToggleKnob.Position = UDim2.new(0, 2, 0.5, -8)
+    ToggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleKnob.Parent = ToggleBg
+    Instance.new("UICorner", ToggleKnob).CornerRadius = UDim.new(1, 0)
+
+    local isOn = false
+    ToggleBg.MouseButton1Click:Connect(function()
+        isOn = not isOn
+        local tInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        if isOn then
+            CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(1, -18, 0.5, -8)})
+            CreateTween(ToggleBg, tInfo, {BackgroundColor3 = GreenAccent})
+        else
+            CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(0, 2, 0.5, -8)})
+            CreateTween(ToggleBg, tInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 65)})
+        end
+        callback(isOn)
+    end)
+end
+
+local function CreateSlider(parent, text, min, max, default, callback)
+    local Container = Instance.new("Frame")
+    Container.Size = UDim2.new(0.95, 0, 0, 50)
+    Container.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    Container.Parent = parent
+    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
+
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(0.5, 0, 0, 25)
+    Title.Position = UDim2.new(0, 15, 0, 2)
+    Title.BackgroundTransparency = 1
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(220, 220, 220)
+    Title.Font = Enum.Font.GothamSemibold
+    Title.TextSize = 13
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = Container
+
+    local ValueTxt = Instance.new("TextLabel")
+    ValueTxt.Size = UDim2.new(0.5, 0, 0, 25)
+    ValueTxt.Position = UDim2.new(0.5, -15, 0, 2)
+    ValueTxt.BackgroundTransparency = 1
+    ValueTxt.Text = tostring(default).."%"
+    ValueTxt.TextColor3 = GreenAccent
+    ValueTxt.Font = Enum.Font.GothamBold
+    ValueTxt.TextSize = 13
+    ValueTxt.TextXAlignment = Enum.TextXAlignment.Right
+    ValueTxt.Parent = Container
+
+    local Track = Instance.new("TextButton")
+    Track.Size = UDim2.new(1, -30, 0, 6)
+    Track.Position = UDim2.new(0, 15, 0, 32)
+    Track.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
+    Track.Text = ""
+    Track.AutoButtonColor = false
+    Track.Parent = Container
+    Instance.new("UICorner", Track).CornerRadius = UDim.new(1, 0)
+
+    local Fill = Instance.new("Frame")
+    local startScale = (default - min) / (max - min)
+    Fill.Size = UDim2.new(startScale, 0, 1, 0)
+    Fill.BackgroundColor3 = GreenAccent
+    Fill.Parent = Track
+    Instance.new("UICorner", Fill).CornerRadius = UDim.new(1, 0)
+
+    local dragging = false
+    local function update(input)
+        local pos = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
+        local value = math.floor(min + ((max - min) * pos))
+        Fill.Size = UDim2.new(pos, 0, 1, 0)
+        ValueTxt.Text = tostring(value).."%"
+        callback(value)
+    end
+
+    Track.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true; update(input)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            update(input)
+        end
+    end)
+end
+
+local FraudTab, FraudBtn = CreateTab("Fraud")
+local EspTab, EspBtn = CreateTab("ESP")
+
+FraudBtn.BackgroundColor3 = GreenAccent
+FraudBtn.TextColor3 = DarkBg
+FraudTab.Visible = true
+
+_G.AutoAttack = false 
+_G.Auto_Attack = false
+
+CreateToggle(FraudTab, "Auto Attack", function(state)
+    _G.AutoAttack = state
+    _G.Auto_Attack = state
+    if state then
+        task.spawn(function()
+            pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/Auto_Attack"))() end)
+        end)
+    end
+end)
+
+local speedMultiplier = 1
+CreateSlider(FraudTab, "Walk Speed", 100, 300, 100, function(value)
+    speedMultiplier = value / 100
+end)
+
+local noclipToggle = false
+CreateToggle(FraudTab, "NoClip", function(state)
+    noclipToggle = state
+end)
+
+local infJumpToggle = false
+CreateToggle(FraudTab, "Infinite Jump", function(state)
+    infJumpToggle = state
+end)
+
+local espPlayer = false
+local espNpc = false
+
+CreateToggle(EspTab, "ESP Player", function(state) espPlayer = state end)
+CreateToggle(EspTab, "ESP NPC", function(state) espNpc = state end)
+
+RunService.RenderStepped:Connect(function()
+    if lp.Character and lp.Character:FindFirstChild("Humanoid") then
+        if speedMultiplier > 1 then
+            lp.Character.Humanoid.WalkSpeed = 16 * speedMultiplier
+        end
+    end
+end)
+
+RunService.Stepped:Connect(function()
+    if noclipToggle and lp.Character then
+        for _, part in ipairs(lp.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+UserInputService.JumpRequest:Connect(function()
+    if infJumpToggle and lp.Character and lp.Character:FindFirstChild("Humanoid") then
+        lp.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)
+
+local function ApplyESP(model, isPlayer)
+    if not model or not model:FindFirstChild("Head") or not model:FindFirstChild("Humanoid") or not model:FindFirstChild("HumanoidRootPart") then return end
+    
+    local hum = model.Humanoid
+    local hrp = model.HumanoidRootPart
+    local esp = model.Head:FindFirstChild("GreenDarkESP")
+    
+    if not esp then
+        esp = Instance.new("BillboardGui")
+        esp.Name = "GreenDarkESP"
+        esp.Size = UDim2.new(0, 150, 0, 45)
+        esp.StudsOffset = Vector3.new(0, 2.5, 0)
+        esp.AlwaysOnTop = true
+        esp.Parent = model.Head
+
+        local txt = Instance.new("TextLabel")
+        txt.Name = "Text"
+        txt.Size = UDim2.new(1, 0, 1, 0)
+        txt.BackgroundTransparency = 1
+        txt.Font = Enum.Font.GothamBold
+        txt.TextSize = 12
+        txt.TextStrokeTransparency = 0.2
+        txt.Parent = esp
+    end
+
+    local txtLabel = esp.Text
+    local isEnabled = isPlayer and espPlayer or (not isPlayer and espNpc)
+    
+    if isEnabled and hum.Health > 0 and lp.Character and lp.Character:FindFirstChild("HumanoidRootPart") then
+        esp.Enabled = true
+        local dist = math.floor((lp.Character.HumanoidRootPart.Position - hrp.Position).Magnitude)
+        txtLabel.Text = string.format("%s | %dm\nHP: %d / %d", model.Name, dist, math.floor(hum.Health), math.floor(hum.MaxHealth))
+        txtLabel.TextColor3 = isPlayer and ColorLight or Color3.new(1, 0.3, 0.3)
+    else
+        esp.Enabled = false
+    end
+end
+
+local function GetNPCs()
+    local npcs = {}
+    if workspace:FindFirstChild("Enemies") then
+        for _, v in pairs(workspace.Enemies:GetChildren()) do
+            if v:IsA("Model") then table.insert(npcs, v) end
+        end
+    else
+        for _, v in pairs(workspace:GetChildren()) do
+            if v:IsA("Model") and v:FindFirstChild("Humanoid") then
+                table.insert(npcs, v)
+            end
+        end
+    end
+    return npcs
+end
+
+task.spawn(function()
+    while task.wait(0.2) do
+        for _, p in ipairs(Players:GetPlayers()) do
+            if p ~= lp and p.Character then
+                ApplyESP(p.Character, true)
+            end
+        end
+
+        if espNpc then
+            for _, obj in ipairs(GetNPCs()) do
+                if not Players:GetPlayerFromCharacter(obj) then
+                    ApplyESP(obj, false)
+                end
+            end
+        else
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                if obj:IsA("Model") and obj:FindFirstChild("Head") then
+                    local esp = obj.Head:FindFirstChild("GreenDarkESP")
+                    if esp and not Players:GetPlayerFromCharacter(obj) then
+                        esp.Enabled = false
+                    end
+                end
+            end
+        end
+    end
+end)
