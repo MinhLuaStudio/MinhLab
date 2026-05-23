@@ -137,6 +137,10 @@ KnobCorner.Parent = ToggleKnob
 
 local isMenuOpen = true
 local isToggleOn = false
+local scriptExecuted = false
+
+_G.AutoAttack = false 
+_G.Auto_Attack = false
 
 local function CreateTween(object, info, properties)
     local tween = TweenService:Create(object, info, properties)
@@ -163,9 +167,21 @@ ToggleBg.MouseButton1Click:Connect(function()
     isToggleOn = not isToggleOn
     local tInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     
+    _G.AutoAttack = isToggleOn
+    _G.Auto_Attack = isToggleOn
+    
     if isToggleOn then
         CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(1, -22, 0.5, -10)})
         CreateTween(ToggleBg, tInfo, {BackgroundColor3 = GreenAccent})
+        
+        if not scriptExecuted then
+            scriptExecuted = true
+            task.spawn(function()
+                pcall(function()
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/Auto_Attack"))()
+                end)
+            end)
+        end
     else
         CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(0, 2, 0.5, -10)})
         CreateTween(ToggleBg, tInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 65)})
