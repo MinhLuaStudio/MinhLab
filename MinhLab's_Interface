@@ -1,0 +1,193 @@
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+
+local guiName = "GreenDarkCustomUI"
+if CoreGui:FindFirstChild(guiName) then
+    CoreGui[guiName]:Destroy()
+end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = guiName
+ScreenGui.Parent = pcall(function() return CoreGui.Name end) and CoreGui or Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local GreenAccent = Color3.fromRGB(0, 215, 100) 
+local DarkBg = Color3.fromRGB(20, 20, 25)
+local LighterBg = Color3.fromRGB(25, 25, 30)
+
+local MiniButton = Instance.new("ImageButton")
+MiniButton.Size = UDim2.new(0, 50, 0, 50)
+MiniButton.Position = UDim2.new(0.1, 0, 0.1, 0)
+MiniButton.BackgroundColor3 = LighterBg
+MiniButton.Image = "rbxassetid://114712897357043"
+MiniButton.Parent = ScreenGui
+MiniButton.AutoButtonColor = false
+
+local MiniCorner = Instance.new("UICorner")
+MiniCorner.CornerRadius = UDim.new(1, 0)
+MiniCorner.Parent = MiniButton
+
+local MiniStroke = Instance.new("UIStroke")
+MiniStroke.Color = GreenAccent
+MiniStroke.Thickness = 2
+MiniStroke.Parent = MiniButton
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 500, 0, 300)
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = DarkBg
+MainFrame.ClipsDescendants = true
+MainFrame.Visible = true
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.Parent = MainFrame
+
+local MainStroke = Instance.new("UIStroke")
+MainStroke.Color = GreenAccent
+MainStroke.Thickness = 1
+MainStroke.Transparency = 0.5
+MainStroke.Parent = MainFrame
+
+local LeftPanel = Instance.new("Frame")
+LeftPanel.Size = UDim2.new(0, 130, 1, 0)
+LeftPanel.BackgroundColor3 = LighterBg
+LeftPanel.BorderSizePixel = 0
+LeftPanel.Parent = MainFrame
+
+local TabButton = Instance.new("TextButton")
+TabButton.Size = UDim2.new(0.9, 0, 0, 35)
+TabButton.Position = UDim2.new(0.05, 0, 0, 20)
+TabButton.BackgroundColor3 = GreenAccent
+TabButton.Text = "Phần Cài Đặt"
+TabButton.TextColor3 = Color3.fromRGB(25, 25, 30)
+TabButton.Font = Enum.Font.GothamBold
+TabButton.TextSize = 13
+TabButton.AutoButtonColor = false
+TabButton.Parent = LeftPanel
+
+local TabCorner = Instance.new("UICorner")
+TabCorner.CornerRadius = UDim.new(0, 6)
+TabCorner.Parent = TabButton
+
+local RightPanel = Instance.new("Frame")
+RightPanel.Size = UDim2.new(1, -130, 1, 0)
+RightPanel.Position = UDim2.new(0, 130, 0, 0)
+RightPanel.BackgroundColor3 = DarkBg
+RightPanel.BackgroundTransparency = 1
+RightPanel.Visible = true
+RightPanel.Parent = MainFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -40, 0, 40)
+TitleLabel.Position = UDim2.new(0, 20, 0, 10)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Auto Attack"
+TitleLabel.TextColor3 = GreenAccent
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 22
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = RightPanel
+
+local ToggleContainer = Instance.new("Frame")
+ToggleContainer.Size = UDim2.new(1, -40, 0, 45)
+ToggleContainer.Position = UDim2.new(0, 20, 0, 65)
+ToggleContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+ToggleContainer.Parent = RightPanel
+
+local ToggleCorner = Instance.new("UICorner")
+ToggleCorner.CornerRadius = UDim.new(0, 6)
+ToggleCorner.Parent = ToggleContainer
+
+local ToggleText = Instance.new("TextLabel")
+ToggleText.Size = UDim2.new(0.7, 0, 1, 0)
+ToggleText.Position = UDim2.new(0, 15, 0, 0)
+ToggleText.BackgroundTransparency = 1
+ToggleText.Text = "Auto Attack" 
+ToggleText.TextColor3 = Color3.fromRGB(220, 220, 220)
+ToggleText.Font = Enum.Font.GothamSemibold
+ToggleText.TextSize = 15
+ToggleText.TextXAlignment = Enum.TextXAlignment.Left
+ToggleText.Parent = ToggleContainer
+
+local ToggleBg = Instance.new("TextButton")
+ToggleBg.Size = UDim2.new(0, 46, 0, 24)
+ToggleBg.Position = UDim2.new(1, -60, 0.5, -12)
+ToggleBg.BackgroundColor3 = Color3.fromRGB(60, 60, 65)
+ToggleBg.Text = ""
+ToggleBg.AutoButtonColor = false
+ToggleBg.Parent = ToggleContainer
+
+local BgCorner = Instance.new("UICorner")
+BgCorner.CornerRadius = UDim.new(1, 0)
+BgCorner.Parent = ToggleBg
+
+local ToggleKnob = Instance.new("Frame")
+ToggleKnob.Size = UDim2.new(0, 20, 0, 20)
+ToggleKnob.Position = UDim2.new(0, 2, 0.5, -10)
+ToggleKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ToggleKnob.Parent = ToggleBg
+
+local KnobCorner = Instance.new("UICorner")
+KnobCorner.CornerRadius = UDim.new(1, 0)
+KnobCorner.Parent = ToggleKnob
+
+local isMenuOpen = true
+local isToggleOn = false
+
+local function CreateTween(object, info, properties)
+    local tween = TweenService:Create(object, info, properties)
+    tween:Play()
+    return tween
+end
+
+MiniButton.MouseButton1Click:Connect(function()
+    isMenuOpen = not isMenuOpen
+    local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+    
+    if isMenuOpen then
+        MainFrame.Visible = true
+        CreateTween(MainFrame, tweenInfo, {Size = UDim2.new(0, 500, 0, 300)})
+    else
+        local closeTween = CreateTween(MainFrame, tweenInfo, {Size = UDim2.new(0, 0, 0, 0)})
+        closeTween.Completed:Connect(function()
+            if not isMenuOpen then MainFrame.Visible = false end
+        end)
+    end
+end)
+
+ToggleBg.MouseButton1Click:Connect(function()
+    isToggleOn = not isToggleOn
+    local tInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    if isToggleOn then
+        CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(1, -22, 0.5, -10)})
+        CreateTween(ToggleBg, tInfo, {BackgroundColor3 = GreenAccent})
+    else
+        CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(0, 2, 0.5, -10)})
+        CreateTween(ToggleBg, tInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 65)})
+    end
+end)
+
+local function MakeDraggable(dragObject, targetObject)
+    local dragging, dragInput, dragStart, startPos
+    dragObject.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true; dragStart = input.Position; startPos = targetObject.Position
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if dragging and (input == dragInput or input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            targetObject.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+    dragObject.InputChanged:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end end)
+    dragObject.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then dragging = false end end)
+end
+
+MakeDraggable(MiniButton, MiniButton)
+MakeDraggable(MainFrame, MainFrame)
