@@ -62,7 +62,7 @@ local TabButton = Instance.new("TextButton")
 TabButton.Size = UDim2.new(0.9, 0, 0, 35)
 TabButton.Position = UDim2.new(0.05, 0, 0, 20)
 TabButton.BackgroundColor3 = GreenAccent
-TabButton.Text = "Phần Cài Đặt"
+TabButton.Text = "fraud"
 TabButton.TextColor3 = Color3.fromRGB(25, 25, 30)
 TabButton.Font = Enum.Font.GothamBold
 TabButton.TextSize = 13
@@ -81,20 +81,9 @@ RightPanel.BackgroundTransparency = 1
 RightPanel.Visible = true
 RightPanel.Parent = MainFrame
 
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, -40, 0, 40)
-TitleLabel.Position = UDim2.new(0, 20, 0, 10)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Auto Attack"
-TitleLabel.TextColor3 = GreenAccent
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextSize = 22
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-TitleLabel.Parent = RightPanel
-
 local ToggleContainer = Instance.new("Frame")
 ToggleContainer.Size = UDim2.new(1, -40, 0, 45)
-ToggleContainer.Position = UDim2.new(0, 20, 0, 65)
+ToggleContainer.Position = UDim2.new(0, 20, 0, 20)
 ToggleContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 ToggleContainer.Parent = RightPanel
 
@@ -137,7 +126,6 @@ KnobCorner.Parent = ToggleKnob
 
 local isMenuOpen = true
 local isToggleOn = false
-local scriptExecuted = false
 
 _G.AutoAttack = false 
 _G.Auto_Attack = false
@@ -174,14 +162,11 @@ ToggleBg.MouseButton1Click:Connect(function()
         CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(1, -22, 0.5, -10)})
         CreateTween(ToggleBg, tInfo, {BackgroundColor3 = GreenAccent})
         
-        if not scriptExecuted then
-            scriptExecuted = true
-            task.spawn(function()
-                pcall(function()
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/Auto_Attack"))()
-                end)
+        task.spawn(function()
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/Auto_Attack"))()
             end)
-        end
+        end)
     else
         CreateTween(ToggleKnob, tInfo, {Position = UDim2.new(0, 2, 0.5, -10)})
         CreateTween(ToggleBg, tInfo, {BackgroundColor3 = Color3.fromRGB(60, 60, 65)})
