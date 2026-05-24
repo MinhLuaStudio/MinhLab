@@ -245,73 +245,46 @@ local function CreateToggle(parent, text, callback)
     end)
 end
 
-local function CreateSlider(parent, text, min, max, default, callback)
+local function CreateTextBox(parent, text, default, callback)
     local Container = Instance.new("Frame")
-    Container.Size = UDim2.new(0.95, 0, 0, 50)
+    Container.Size = UDim2.new(0.95, 0, 0, 40)
     Container.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
     Container.Parent = parent
     Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 6)
 
     local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(0.5, 0, 0, 25)
-    Title.Position = UDim2.new(0, 15, 0, 2)
+    Title.Size = UDim2.new(0.5, 0, 1, 0)
+    Title.Position = UDim2.new(0, 15, 0, 0)
     Title.BackgroundTransparency = 1
     Title.Text = text
     Title.TextColor3 = Color3.fromRGB(220, 220, 220)
     Title.Font = Enum.Font.GothamSemibold
-    Title.TextSize = 13
+    Title.TextSize = 14
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.Parent = Container
 
-    local ValueTxt = Instance.new("TextLabel")
-    ValueTxt.Size = UDim2.new(0.5, 0, 0, 25)
-    ValueTxt.Position = UDim2.new(0.5, -15, 0, 2)
-    ValueTxt.BackgroundTransparency = 1
-    ValueTxt.Text = tostring(default).."%"
-    ValueTxt.TextColor3 = GreenAccent
-    ValueTxt.Font = Enum.Font.GothamBold
-    ValueTxt.TextSize = 13
-    ValueTxt.TextXAlignment = Enum.TextXAlignment.Right
-    ValueTxt.Parent = Container
+    local InputBg = Instance.new("Frame")
+    InputBg.Size = UDim2.new(0, 80, 0, 26)
+    InputBg.Position = UDim2.new(1, -95, 0.5, -13)
+    InputBg.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    InputBg.Parent = Container
+    Instance.new("UICorner", InputBg).CornerRadius = UDim.new(0, 4)
 
-    local Track = Instance.new("TextButton")
-    Track.Size = UDim2.new(1, -30, 0, 6)
-    Track.Position = UDim2.new(0, 15, 0, 32)
-    Track.BackgroundColor3 = Color3.fromRGB(50, 50, 55)
-    Track.Text = ""
-    Track.AutoButtonColor = false
-    Track.Parent = Container
-    Instance.new("UICorner", Track).CornerRadius = UDim.new(1, 0)
+    local TextBox = Instance.new("TextBox")
+    TextBox.Size = UDim2.new(1, 0, 1, 0)
+    TextBox.BackgroundTransparency = 1
+    TextBox.Text = tostring(default)
+    TextBox.TextColor3 = GreenAccent
+    TextBox.Font = Enum.Font.GothamBold
+    TextBox.TextSize = 13
+    TextBox.Parent = InputBg
 
-    local Fill = Instance.new("Frame")
-    local startScale = (default - min) / (max - min)
-    Fill.Size = UDim2.new(startScale, 0, 1, 0)
-    Fill.BackgroundColor3 = GreenAccent
-    Fill.Parent = Track
-    Instance.new("UICorner", Fill).CornerRadius = UDim.new(1, 0)
-
-    local dragging = false
-    local function update(input)
-        local pos = math.clamp((input.Position.X - Track.AbsolutePosition.X) / Track.AbsoluteSize.X, 0, 1)
-        local value = math.floor(min + ((max - min) * pos))
-        Fill.Size = UDim2.new(pos, 0, 1, 0)
-        ValueTxt.Text = tostring(value).."%"
-        callback(value)
-    end
-
-    Track.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true; update(input)
-        end
-    end)
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-            dragging = false
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            update(input)
+    TextBox.FocusLost:Connect(function()
+        local val = tonumber(TextBox.Text)
+        if val then
+            callback(val)
+        else
+            TextBox.Text = tostring(default)
         end
     end)
 end
@@ -336,9 +309,18 @@ CreateToggle(FraudTab, "Auto Attack", function(state)
     end
 end)
 
-local speedMultiplier = 1
-CreateSlider(FraudTab, "Walk Speed", 100, 300, 100, function(value)
-    speedMultiplier = value / 100
+local speedToggle = false
+local customSpeed = 50
+
+CreateToggle(FraudTab, "Enable Walk Speed", function(state)
+    speedToggle = state
+    if not state and lp.Character and lp.Character:FindFirstChild("Humanoid") then
+        lp.Character.Humanoid.WalkSpeed = 16
+    end
+end)
+
+CreateTextBox(FraudTab, "Speed Value", 50, function(value)
+    customSpeed = value
 end)
 
 local noclipToggle = false
@@ -358,10 +340,8 @@ CreateToggle(EspTab, "ESP Player", function(state) espPlayer = state end)
 CreateToggle(EspTab, "ESP NPC", function(state) espNpc = state end)
 
 RunService.RenderStepped:Connect(function()
-    if lp.Character and lp.Character:FindFirstChild("Humanoid") then
-        if speedMultiplier > 1 then
-            lp.Character.Humanoid.WalkSpeed = 16 * speedMultiplier
-        end
+    if speedToggle and lp.Character and lp.Character:FindFirstChild("Humanoid") then
+        lp.Character.Humanoid.WalkSpeed = customSpeed
     end
 end)
 
