@@ -291,6 +291,7 @@ end
 
 local FraudTab, FraudBtn = CreateTab("Fraud")
 local EspTab, EspBtn = CreateTab("ESP")
+local GraphicsTab, GraphicsBtn = CreateTab("Graphics")
 
 FraudBtn.BackgroundColor3 = GreenAccent
 FraudBtn.TextColor3 = DarkBg
@@ -338,6 +339,14 @@ local espNpc = false
 
 CreateToggle(EspTab, "ESP Player", function(state) espPlayer = state end)
 CreateToggle(EspTab, "ESP NPC", function(state) espNpc = state end)
+
+CreateToggle(GraphicsTab, "Gloomy Rain", function(state)
+    if state then
+        task.spawn(function()
+            pcall(function() loadstring(game:HttpGet("https://raw.githubusercontent.com/MinhLuaStudio/MinhLab/refs/heads/main/gloomy_rain"))() end)
+        end)
+    end
+end)
 
 RunService.RenderStepped:Connect(function()
     if speedToggle and lp.Character and lp.Character:FindFirstChild("Humanoid") then
