@@ -1,0 +1,180 @@
+local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
+local Terrain = workspace:FindFirstChild("Terrain")
+
+for _, v in pairs(Lighting:GetChildren()) do
+	if v:IsA("PostEffect") or v:IsA("Sky") or v:IsA("Atmosphere") then
+		v:Destroy()
+	end
+end
+
+Lighting.Technology = Enum.Technology.Future
+Lighting.Ambient = Color3.fromRGB(55, 55, 62)
+Lighting.Brightness = 1.8
+Lighting.ClockTime = 1.2
+Lighting.ColorShift_Bottom = Color3.fromRGB(90, 90, 105)
+Lighting.ColorShift_Top = Color3.fromRGB(140, 140, 155)
+Lighting.EnvironmentDiffuseScale = 1.05
+Lighting.EnvironmentSpecularScale = 2.4
+Lighting.GlobalShadows = true
+Lighting.OutdoorAmbient = Color3.fromRGB(45, 45, 52)
+Lighting.ShadowSoftness = 0.75
+Lighting.ExposureCompensation = 0.35
+
+Lighting.FogEnd = 120
+Lighting.FogStart = 100
+Lighting.FogColor = Color3.fromRGB(72, 72, 80)
+
+local Sky = Instance.new("Sky")
+Sky.SkyboxBk = "http://www.roblox.com/asset/?id=600830446"
+Sky.SkyboxDn = "http://www.roblox.com/asset/?id=600831635"
+Sky.SkyboxFt = "http://www.roblox.com/asset/?id=600830446"
+Sky.SkyboxLf = "http://www.roblox.com/asset/?id=600830446"
+Sky.SkyboxRt = "http://www.roblox.com/asset/?id=600830446"
+Sky.SkyboxUp = "http://www.roblox.com/asset/?id=600832720"
+Sky.SunAngularSize = 4
+Sky.Parent = Lighting
+
+local Atmosphere = Instance.new("Atmosphere")
+Atmosphere.Density = 0.65
+Atmosphere.Offset = 0.45
+Atmosphere.Color = Color3.fromRGB(95, 95, 105)
+Atmosphere.Decay = Color3.fromRGB(65, 65, 75)
+Atmosphere.Glare = 0.4
+Atmosphere.Haze = 2.8
+Atmosphere.Parent = Lighting
+
+local ColorCorrection = Instance.new("ColorCorrectionEffect")
+ColorCorrection.Brightness = -0.05
+ColorCorrection.Contrast = 0.35
+ColorCorrection.Saturation = -0.15
+ColorCorrection.TintColor = Color3.fromRGB(165, 165, 175)
+ColorCorrection.Parent = Lighting
+
+local Bloom = Instance.new("BloomEffect")
+Bloom.Intensity = 0.95
+Bloom.Size = 24
+Bloom.Threshold = 1.1
+Bloom.Parent = Lighting
+
+local SunRays = Instance.new("SunRaysEffect")
+SunRays.Intensity = 0.15
+SunRays.Spread = 0.6
+SunRays.Parent = Lighting
+
+local DepthOfField = Instance.new("DepthOfFieldEffect")
+DepthOfField.FocusDistance = 65
+DepthOfField.InFocusRadius = 40
+DepthOfField.NearIntensity = 0.4
+DepthOfField.FarIntensity = 0.85
+DepthOfField.Parent = Lighting
+
+local rainPart = Instance.new("Part")
+rainPart.Name = "GloomyRain"
+rainPart.Transparency = 1
+rainPart.CanCollide = false
+rainPart.Anchored = true
+rainPart.Size = Vector3.new(400, 1, 400)
+rainPart.Position = Vector3.new(0, 180, 0)
+rainPart.Parent = workspace
+
+local rainMain = Instance.new("ParticleEmitter")
+rainMain.Texture = "rbxassetid://243660364"
+rainMain.Color = ColorSequence.new(Color3.fromRGB(200, 200, 210))
+rainMain.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.09), NumberSequenceKeypoint.new(1, 0.16)})
+rainMain.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.4), NumberSequenceKeypoint.new(1, 1)})
+rainMain.Lifetime = NumberRange.new(8, 13)
+rainMain.Rate = 2600
+rainMain.Speed = NumberRange.new(60, 88)
+rainMain.VelocitySpread = 14
+rainMain.Acceleration = Vector3.new(0, -85, 0)
+rainMain.Rotation = NumberRange.new(-25, 25)
+rainMain.Orientation = Enum.ParticleOrientation.FacingCamera
+rainMain.Parent = rainPart
+
+local rainExtra = rainMain:Clone()
+rainExtra.Rate = 1450
+rainExtra.Speed = NumberRange.new(48, 70)
+rainExtra.Acceleration = Vector3.new(0, -65, 0)
+rainExtra.Parent = rainPart
+
+local rainSound = Instance.new("Sound")
+rainSound.SoundId = "rbxassetid://911367518"
+rainSound.Volume = 0.7
+rainSound.Looped = true
+rainSound.Parent = Lighting
+rainSound:Play()
+
+local thunderSounds = {
+	"rbxassetid://5890867296",
+	"rbxassetid://6955233353",
+	"rbxassetid://6365158566",
+	"rbxassetid://131300621"
+}
+
+local thunderInstances = {}
+for _, id in ipairs(thunderSounds) do
+	local sound = Instance.new("Sound")
+	sound.SoundId = id
+	sound.Volume = 0.75
+	sound.PlaybackSpeed = 1.0
+	sound.Parent = Lighting
+	table.insert(thunderInstances, sound)
+end
+
+SoundService.AmbientReverb = Enum.ReverbType.NoReverb
+
+local lightningEnabled = true
+
+local function createLightningStrike()
+	local startPos = Vector3.new(math.random(-180, 180), 195, math.random(-180, 180))
+	local endPos = startPos + Vector3.new(math.random(-30, 30), -190, math.random(-30, 30))
+	
+	local lightning = Instance.new("Part")
+	lightning.Anchored = true
+	lightning.CanCollide = false
+	lightning.Transparency = 1
+	lightning.Size = Vector3.new(1.1, (startPos - endPos).Magnitude, 1.1)
+	lightning.CFrame = CFrame.lookAt(startPos, endPos) * CFrame.new(0, -lightning.Size.Y/2, 0)
+	lightning.Parent = workspace
+	
+	local beam = Instance.new("Beam")
+	beam.Color = ColorSequence.new(Color3.fromRGB(235, 235, 245))
+	beam.LightEmission = 1
+	beam.Transparency = NumberSequence.new(0.1, 0.8)
+	beam.Width0 = 1.6
+	beam.Width1 = 0.4
+	beam.Texture = "rbxassetid://707177944"
+	beam.TextureSpeed = 3
+	beam.Segments = 14
+	beam.Attachment0 = Instance.new("Attachment", lightning)
+	beam.Attachment1 = Instance.new("Attachment", lightning)
+	beam.Attachment1.Position = Vector3.new(0, -lightning.Size.Y, 0)
+	beam.Parent = lightning
+	
+	Lighting.Brightness = 6.5
+	ColorCorrection.TintColor = Color3.fromRGB(210, 210, 225)
+	
+	wait(0.08)
+	Lighting.Brightness = 1.9
+	ColorCorrection.TintColor = Color3.fromRGB(165, 165, 175)
+	
+	wait(0.2)
+	lightning:Destroy()
+end
+
+spawn(function()
+	while lightningEnabled do
+		wait(math.random(8, 20))
+		createLightningStrike()
+		
+		local randomSound = thunderInstances[math.random(1, #thunderInstances)]
+		wait(math.random(0.7, 2.3))
+		randomSound:Play()
+		
+		if math.random(1,3) == 1 then
+			wait(0.4)
+			createLightningStrike()
+		end
+	end
+end)
